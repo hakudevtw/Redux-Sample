@@ -7,7 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import type { Post, NewPost, EditPost, Reaction } from "./interfaces";
-import { posts } from "@/mock/posts";
+import { posts } from "@/mock-data/posts";
 import type { RequestState } from "@/store/interfaces";
 
 const initialState: { posts: Post[] } & RequestState = {
@@ -26,11 +26,9 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     addPost: {
-      // 將 prepare 產生的 payload 拿去更新
       reducer(state, action: PayloadAction<Post>) {
         state.posts.push(action.payload);
       },
-      // 產生 action payload (實際用於 action creator)
       prepare(postContent: NewPost) {
         return {
           payload: {

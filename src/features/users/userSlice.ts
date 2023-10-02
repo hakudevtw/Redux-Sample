@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "@/store";
-import { users } from "@/mock/users";
+import { users } from "@/mock-data/users";
 
 interface User {
   id: string;

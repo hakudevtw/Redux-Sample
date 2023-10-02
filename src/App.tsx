@@ -5,7 +5,7 @@ import {
   Redirect,
 } from "react-router-dom";
 
-import Navbar from "@/layout/Navbar";
+import Navbar from "@/components/Navbar";
 import {
   PostsList,
   AddPostForm,
@@ -14,6 +14,11 @@ import {
 } from "@/features/posts";
 
 function App() {
+  (async function () {
+    const res = await fetch("/api/posts");
+    const data = await res.json();
+    console.log(data);
+  })();
   return (
     <Router>
       <Navbar />

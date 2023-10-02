@@ -11,9 +11,5 @@ export type NewPost = Omit<Post, "id" | "date" | "reactions">;
 export type EditPost = Omit<Post, "userId" | "date" | "reactions">;
 
 export type Reaction = "thumbsUp" | "hooray" | "heart" | "rocket" | "eyes";
-export type ReactionCounts = {
-  [key in Reaction]: number;
-};
-export type ReactionEmoji = {
-  [key in Reaction]: string;
-};
+export type ReactionCounts = { [key in Reaction]: number };
+export type ReactionEmoji = { [key in Reaction]: string };
