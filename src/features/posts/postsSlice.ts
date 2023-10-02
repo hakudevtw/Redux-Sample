@@ -2,7 +2,7 @@
 import { createSlice, nanoid, type PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import type { Post, NewPost, EditPost, Reaction } from "./interfaces";
-import { posts } from "@/mock/posts";
+import { posts } from "@/mock-data/posts";
 
 const initialState: Post[] = posts;
 
@@ -10,20 +10,10 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    // 在這裏需要在建立時為其生成一個 id，雖然可以在 component 中生成組好後再新增，
-    // 但這樣做可能造成需要在多處做重複的動作，而在邏輯更為複雜時影響會更明顯
-    // addPost(state, action: PayloadAction<Post>) {
-    //   state.push(action.payload);
-    // },
-
-    // 客製化 action creator
-    // 用 : PayloadAction 來定義 payload type
     addPost: {
-      // 將 prepare 產生的 payload 拿去更新
       reducer(state, action: PayloadAction<Post>) {
         state.push(action.payload);
       },
-      // 產生 action payload (實際用於 action creator)
       prepare(postContent: NewPost) {
         return {
           payload: {

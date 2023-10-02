@@ -1,6 +1,5 @@
 import { useState, type ChangeEvent } from "react";
-import type { RouteComponentProps } from "react-router";
-import { useHistory } from "react-router-dom";
+import { useHistory, type RouteComponentProps } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectPost, updatePost } from "../postsSlice";
 
