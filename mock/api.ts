@@ -3,7 +3,7 @@ import { getPosts } from "./model";
 
 export default [
   {
-    url: "/posts",
+    url: "/api/posts",
     method: "get",
     response: getPosts,
   },

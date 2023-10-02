@@ -15,7 +15,7 @@ import {
 
 function App() {
   (async function () {
-    const res = await fetch("/posts");
+    const res = await fetch("/api/posts");
     const data = await res.json();
     console.log(data);
   })();
