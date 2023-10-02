@@ -1,8 +1,8 @@
 import { useState, type ChangeEvent } from "react";
-import type { RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { selectPost, updatePost } from "../postsSlice";
+import { selectPostById, updatePost } from "../postsSlice";
 
 interface Props extends RouteComponentProps<{ postId: string }> {}
 
@@ -10,7 +10,7 @@ const EditPostForm: React.FC<Props> = ({ match }) => {
   const { postId } = match.params;
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const post = useAppSelector(selectPost(postId));
+  const post = useAppSelector(selectPostById(postId));
 
   const [title, setTitle] = useState(post!.title);
   const [content, setContent] = useState(post!.content);

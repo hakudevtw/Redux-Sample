@@ -1,4 +1,4 @@
-import type { ReactionEmoji } from "./interfaces";
+import type { ReactionEmoji } from "@/features/posts";
 
 export const reactionEmoji: ReactionEmoji = {
   thumbsUp: "👍",

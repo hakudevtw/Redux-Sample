@@ -1,10 +1,10 @@
 import { useAppSelector } from "@/store/hooks";
-import { selectPosts } from "../postsSlice";
+import { selectAllPosts } from "../postsSlice";
 import { Link } from "react-router-dom";
 import ReactionButtons from "./ReactionButtons";
 
 const PostsList = () => {
-  const posts = useAppSelector(selectPosts);
+  const posts = useAppSelector(selectAllPosts);
   const orderedPosts = posts
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
