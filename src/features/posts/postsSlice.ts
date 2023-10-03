@@ -24,8 +24,9 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 export const addNewPost = createAsyncThunk(
   "posts/addNewPost",
   async (initialPost: NewPost) => {
-    const response = await axios.post("/api/posts", initialPost);
-    return response.data as Post;
+    const res = await axios.post("/api/posts", initialPost);
+    await delay(2000);
+    return res.data as Post;
   }
 );
 
@@ -33,22 +34,6 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    // addPost: {
-    //   reducer(state, action: PayloadAction<Post>) {
-    //     state.posts.push(action.payload);
-    //   },
-    //   prepare(postContent: NewPost) {
-    //     return {
-    //       payload: {
-    //         id: nanoid(),
-    //         date: new Date().toISOString(),
-    //         reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
-    //         ...postContent,
-    //       },
-    //     };
-    //   },
-    // },
-
     updatePost(state, action: PayloadAction<EditPost>) {
       const { id, title, content } = action.payload;
       const existingPost = state.posts.find((post) => post.id === id);
