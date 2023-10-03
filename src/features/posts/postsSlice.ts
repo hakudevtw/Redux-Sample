@@ -1,45 +1,53 @@
-// RTK 提供的一個隨機 id 產生器，可以取代其他 uuid 產生器
 import {
   createSlice,
-  nanoid,
   createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
+import axios from "axios";
 import { RootState } from "@/store";
 import type { Post, NewPost, EditPost, Reaction } from "./interfaces";
-import { posts } from "@/mock-data/posts";
 import type { RequestState } from "@/store/interfaces";
+import { delay } from "@/utils/tools";
 
 const initialState: { posts: Post[] } & RequestState = {
-  posts,
+  posts: [],
   status: "idle",
   error: null,
 };
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  // Fetch Posts
-  // Return Posts
+  const res = await axios.get("/api/posts");
+  await delay(2000);
+  return res.data;
 });
+
+export const addNewPost = createAsyncThunk(
+  "posts/addNewPost",
+  async (initialPost: NewPost) => {
+    const response = await axios.post("/api/posts", initialPost);
+    return response.data as Post;
+  }
+);
 
 const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    addPost: {
-      reducer(state, action: PayloadAction<Post>) {
-        state.posts.push(action.payload);
-      },
-      prepare(postContent: NewPost) {
-        return {
-          payload: {
-            id: nanoid(),
-            date: new Date().toISOString(),
-            reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
-            ...postContent,
-          },
-        };
-      },
-    },
+    // addPost: {
+    //   reducer(state, action: PayloadAction<Post>) {
+    //     state.posts.push(action.payload);
+    //   },
+    //   prepare(postContent: NewPost) {
+    //     return {
+    //       payload: {
+    //         id: nanoid(),
+    //         date: new Date().toISOString(),
+    //         reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
+    //         ...postContent,
+    //       },
+    //     };
+    //   },
+    // },
 
     updatePost(state, action: PayloadAction<EditPost>) {
       const { id, title, content } = action.payload;
@@ -59,6 +67,25 @@ const postsSlice = createSlice({
       if (existingPost) existingPost.reactions[reaction]++;
     },
   },
+
+  extraReducers(builder) {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        // Add any fetched posts to the array
+        state.posts = state.posts.concat(action.payload);
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message!;
+      })
+      .addCase(addNewPost.fulfilled, (state, action) => {
+        state.posts.push(action.payload);
+      });
+  },
 });
 
 export const selectAllPosts = (state: RootState) => state.posts.posts;
@@ -70,5 +97,5 @@ export const selectPostById = (postId: string) => (state: RootState) =>
 // 用法
 // const post = useSelector(state => selectPostById(state, postId));
 
-export const { addPost, updatePost, addReaction } = postsSlice.actions;
+export const { updatePost, addReaction } = postsSlice.actions;
 export default postsSlice.reducer;

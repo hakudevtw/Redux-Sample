@@ -14,11 +14,6 @@ import {
 } from "@/features/posts";
 
 function App() {
-  (async function () {
-    const res = await fetch("/api/posts");
-    const data = await res.json();
-    console.log(data);
-  })();
   return (
     <Router>
       <Navbar />

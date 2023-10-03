@@ -1,3 +1,6 @@
+import { randomUUID } from "crypto";
+import type { NewPost, Post } from "@/features/posts/interfaces";
+
 const users = [
   { id: "0", name: "Tianna Jenkins" },
   { id: "1", name: "Kevin Grant" },
@@ -23,10 +26,18 @@ const posts = [
   },
 ];
 
-export function getPosts() {
-  return posts;
-}
+export const getAllPosts = () => posts;
 
-export function getUsers() {
-  return users;
-}
+export const addNewPost = (req: { body: NewPost }) => {
+  const { body } = req;
+  const newPost = {
+    ...body,
+    id: randomUUID(),
+    date: new Date().toISOString(),
+    reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
+  };
+  posts.push(newPost);
+  return newPost as Post;
+};
+
+export const getAllUsers = () => users;

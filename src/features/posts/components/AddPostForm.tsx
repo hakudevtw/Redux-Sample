@@ -1,6 +1,6 @@
 import { type ChangeEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addPost } from "../postsSlice";
+import { addNewPost } from "../postsSlice";
 import { selectUsers } from "@/features/users";
 
 const AddPostForm = () => {
@@ -22,7 +22,7 @@ const AddPostForm = () => {
     if (!title || !content || !userId) return;
 
     const post = { title, content, userId };
-    dispatch(addPost(post));
+    dispatch(addNewPost(post));
 
     setTitle("");
     setContent("");

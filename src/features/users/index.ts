@@ -1,1 +1,6 @@
-export { default as usersReducer, selectUser, selectUsers } from "./userSlice";
+export {
+  default as usersReducer,
+  selectUser,
+  selectUsers,
+  fetchUsers,
+} from "./userSlice";
