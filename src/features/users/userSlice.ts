@@ -3,7 +3,7 @@ import type { RootState } from "@/store";
 import axios from "axios";
 import { delay } from "@/utils/tools";
 
-interface User {
+export interface User {
   id: string;
   name: string;
 }
@@ -22,14 +22,14 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      // state.push(,,,action.payload);
+      // state.push(...,action.payload);
       return action.payload;
     });
   },
 });
 
-export const selectUsers = (state: RootState) => state.users;
-export const selectUser = (userId: string) => (state: RootState) =>
+export const selectAllUsers = (state: RootState) => state.users;
+export const selectUserById = (userId: User["id"]) => (state: RootState) =>
   state.users.find((user) => user.id === userId);
 
 export default userSlice.reducer;

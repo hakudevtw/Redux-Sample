@@ -45,7 +45,7 @@ const postsSlice = createSlice({
 
     addReaction(
       state,
-      action: PayloadAction<{ postId: string; reaction: Reaction }>
+      action: PayloadAction<{ postId: Post["id"]; reaction: Reaction }>
     ) {
       const { postId, reaction } = action.payload;
       const existingPost = state.posts.find((post) => post.id === postId);
@@ -74,7 +74,7 @@ const postsSlice = createSlice({
 });
 
 export const selectAllPosts = (state: RootState) => state.posts.posts;
-export const selectPostById = (postId: string) => (state: RootState) =>
+export const selectPostById = (postId: Post["id"]) => (state: RootState) =>
   state.posts.posts.find((post) => post.id === postId);
 
 // 另一種寫法

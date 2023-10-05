@@ -1,11 +1,5 @@
 import { randomUUID } from "crypto";
-import type { NewPost, Post } from "@/features/posts/interfaces";
-
-const users = [
-  { id: "0", name: "Tianna Jenkins" },
-  { id: "1", name: "Kevin Grant" },
-  { id: "2", name: "Madison Price" },
-];
+import type { NewPost, Post } from "@/features/posts";
 
 const posts = [
   {
@@ -39,5 +33,3 @@ export const addNewPost = (req: { body: NewPost }) => {
   posts.push(newPost);
   return newPost as Post;
 };
-
-export const getAllUsers = () => users;

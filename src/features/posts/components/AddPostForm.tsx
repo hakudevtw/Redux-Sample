@@ -1,13 +1,13 @@
 import { type ChangeEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addNewPost } from "../postsSlice";
-import { selectUsers } from "@/features/users";
+import { selectAllUsers } from "@/features/users";
 import type { NewPost } from "../interfaces";
 import { formIsValid } from "@/utils/tools";
 import type { RequestStatus } from "@/store/interfaces";
 
 const AddPostForm = () => {
-  const users = useAppSelector(selectUsers);
+  const users = useAppSelector(selectAllUsers);
   const dispatch = useAppDispatch();
 
   const [requestStatus, setRequestStatus] = useState<RequestStatus>("idle");
