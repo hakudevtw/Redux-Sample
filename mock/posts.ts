@@ -1,21 +1,23 @@
 import { randomUUID } from "crypto";
 import type { NewPost, Post } from "@/features/posts";
+import { generateRandomDate } from "@/utils/tools";
 
 const posts = [
   {
     id: "1",
-    title: "First Post!",
-    content: "Hello!",
+    title: "天空之城名言",
+    content:
+      "土に根を下ろし、風と共に生きよう。種と共に冬を越え、鳥と共に春を歌おう。",
     userId: "0",
-    date: new Date(1998, 9, 30).toISOString(),
+    date: generateRandomDate(new Date(2023, 9, 5)).toISOString(),
     reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
   },
   {
     id: "2",
-    title: "Second Post",
-    content: "More text",
+    title: "龍貓名言",
+    content: "梦だけど、梦じゃなかった！",
     userId: "1",
-    date: new Date(1998, 9, 30).toISOString(),
+    date: generateRandomDate(new Date(2023, 9, 5)).toISOString(),
     reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
   },
 ];

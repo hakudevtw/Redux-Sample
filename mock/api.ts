@@ -1,7 +1,7 @@
 import { MockMethod } from "vite-plugin-mock";
 import { getAllPosts, addNewPost } from "./posts";
 import { getAllUsers } from "./users";
-import { getAllNotifications } from "./notifications";
+import { getLatestNotifications } from "./notifications";
 
 export default [
   {
@@ -22,6 +22,6 @@ export default [
   {
     url: "/api/notifications",
     method: "get",
-    response: getAllNotifications,
+    response: getLatestNotifications,
   },
 ] as MockMethod[];

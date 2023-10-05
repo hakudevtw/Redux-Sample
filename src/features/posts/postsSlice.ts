@@ -15,18 +15,21 @@ const initialState: { posts: Post[] } & RequestState = {
   error: null,
 };
 
-export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  const res = await axios.get("/api/posts");
-  await delay(2000);
-  return res.data;
-});
+export const fetchPosts = createAsyncThunk<Post[]>(
+  "posts/fetchPosts",
+  async () => {
+    const res = await axios.get("/api/posts");
+    await delay(2000);
+    return res.data;
+  }
+);
 
-export const addNewPost = createAsyncThunk(
+export const addNewPost = createAsyncThunk<Post, NewPost>(
   "posts/addNewPost",
-  async (initialPost: NewPost) => {
+  async (initialPost) => {
     const res = await axios.post("/api/posts", initialPost);
     await delay(2000);
-    return res.data as Post;
+    return res.data;
   }
 );
 
@@ -76,11 +79,6 @@ const postsSlice = createSlice({
 export const selectAllPosts = (state: RootState) => state.posts.posts;
 export const selectPostById = (postId: Post["id"]) => (state: RootState) =>
   state.posts.posts.find((post) => post.id === postId);
-
-// 另一種寫法
-// export const selectPostById = (state, postId) => state.posts.find((post) => post.id === postId);
-// 用法
-// const post = useSelector(state => selectPostById(state, postId));
 
 export const { updatePost, addReaction } = postsSlice.actions;
 export default postsSlice.reducer;

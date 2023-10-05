@@ -6,14 +6,14 @@ import {
 } from "react-router-dom";
 
 import Navbar from "@/components/Navbar";
+import { UsersList, UserPage } from "@/features/users";
+import { NotificationsList } from "./features/notifications";
 import {
   PostsList,
   AddPostForm,
   SinglePostPage,
   EditPostForm,
 } from "@/features/posts";
-
-import { UsersList, UserPage } from "@/features/users";
 
 function App() {
   return (
@@ -35,6 +35,7 @@ function App() {
           <Route exact path="/editPost/:postId" component={EditPostForm} />
           <Route exact path="/users" component={UsersList} />
           <Route exact path="/users/:userId" component={UserPage} />
+          <Route exact path="/notifications" component={NotificationsList} />
           <Redirect to="/" />
         </Switch>
       </div>

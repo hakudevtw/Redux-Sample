@@ -2,19 +2,18 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "@/store";
 import axios from "axios";
 import { delay } from "@/utils/tools";
-
-export interface User {
-  id: string;
-  name: string;
-}
+import type { User } from "./interfaces";
 
 const initialState: User[] = [];
 
-export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const res = await axios.get("/api/users");
-  await delay(2000);
-  return res.data;
-});
+export const fetchUsers = createAsyncThunk<User[]>(
+  "users/fetchUsers",
+  async () => {
+    const res = await axios.get("/api/users");
+    await delay(2000);
+    return res.data;
+  }
+);
 
 const userSlice = createSlice({
   name: "users",
