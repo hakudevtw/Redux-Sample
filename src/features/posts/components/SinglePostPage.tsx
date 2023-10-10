@@ -11,7 +11,7 @@ interface Props extends RouteComponentProps<{ postId: string }> {}
 
 const SinglePostPage: React.FC<Props> = ({ match }) => {
   const { postId } = match.params;
-  const post = useAppSelector(selectPostById(postId));
+  const post = useAppSelector((state) => selectPostById(state, postId));
 
   if (!post) {
     return (

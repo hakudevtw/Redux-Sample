@@ -9,15 +9,13 @@ const EditPostForm: React.FC<Props> = ({ match }) => {
   const { postId } = match.params;
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const post = useAppSelector(selectPostById(postId));
+  const post = useAppSelector((state) => selectPostById(state, postId));
 
   const [title, setTitle] = useState(post!.title);
   const [content, setContent] = useState(post!.content);
 
-  const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) =>
-    setTitle(e.target.value);
-  const onContentChanged = (e: ChangeEvent<HTMLTextAreaElement>) =>
-    setContent(e.target.value);
+  const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+  const onContentChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
 
   const onSavePostClicked = () => {
     if (!title || !content) return;
@@ -39,12 +37,7 @@ const EditPostForm: React.FC<Props> = ({ match }) => {
           onChange={onTitleChanged}
         />
         <label htmlFor="postContent">Content:</label>
-        <textarea
-          id="postContent"
-          name="postContent"
-          value={content}
-          onChange={onContentChanged}
-        />
+        <textarea id="postContent" name="postContent" value={content} onChange={onContentChanged} />
       </form>
       <button type="button" onClick={onSavePostClicked}>
         Save Post

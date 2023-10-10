@@ -6,7 +6,7 @@ interface Props {
 }
 
 const PostAuthor: React.FC<Props> = ({ userId }) => {
-  const author = useAppSelector(selectUserById(userId));
+  const author = useAppSelector((state) => selectUserById(state, userId));
 
   return <span>by {author ? author.name : "Unknown author"}</span>;
 };

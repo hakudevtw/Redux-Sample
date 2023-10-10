@@ -1,6 +1,7 @@
 import {
   createSlice,
   createAsyncThunk,
+  createEntityAdapter,
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -9,20 +10,20 @@ import type { Post, NewPost, EditPost, Reaction } from "./interfaces";
 import type { RequestState } from "@/store/interfaces";
 import { delay } from "@/utils/tools";
 
-const initialState: { posts: Post[] } & RequestState = {
-  posts: [],
+const postsAdapter = createEntityAdapter<Post>({
+  sortComparer: (a, b) => b.date.localeCompare(a.date),
+});
+
+const initialState = postsAdapter.getInitialState<RequestState>({
   status: "idle",
   error: null,
-};
+});
 
-export const fetchPosts = createAsyncThunk<Post[]>(
-  "posts/fetchPosts",
-  async () => {
-    const res = await axios.get("/api/posts");
-    await delay(2000);
-    return res.data;
-  }
-);
+export const fetchPosts = createAsyncThunk<Post[]>("posts/fetchPosts", async () => {
+  const res = await axios.get("/api/posts");
+  await delay(2000);
+  return res.data;
+});
 
 export const addNewPost = createAsyncThunk<Post, NewPost>(
   "posts/addNewPost",
@@ -39,19 +40,16 @@ const postsSlice = createSlice({
   reducers: {
     updatePost(state, action: PayloadAction<EditPost>) {
       const { id, title, content } = action.payload;
-      const existingPost = state.posts.find((post) => post.id === id);
+      const existingPost = state.entities[id];
       if (existingPost) {
         existingPost.title = title;
         existingPost.content = content;
       }
     },
 
-    addReaction(
-      state,
-      action: PayloadAction<{ postId: Post["id"]; reaction: Reaction }>
-    ) {
+    addReaction(state, action: PayloadAction<{ postId: Post["id"]; reaction: Reaction }>) {
       const { postId, reaction } = action.payload;
-      const existingPost = state.posts.find((post) => post.id === postId);
+      const existingPost = state.entities[postId];
       if (existingPost) existingPost.reactions[reaction]++;
     },
   },
@@ -64,21 +62,21 @@ const postsSlice = createSlice({
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
         // Add any fetched posts to the array
-        state.posts = state.posts.concat(action.payload);
+        postsAdapter.upsertMany(state, action.payload);
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message!;
       })
-      .addCase(addNewPost.fulfilled, (state, action) => {
-        state.posts.push(action.payload);
-      });
+      .addCase(addNewPost.fulfilled, postsAdapter.addOne);
   },
 });
 
-export const selectAllPosts = (state: RootState) => state.posts.posts;
-export const selectPostById = (postId: Post["id"]) => (state: RootState) =>
-  state.posts.posts.find((post) => post.id === postId);
+export const {
+  selectAll: selectAllPosts,
+  selectById: selectPostById,
+  selectIds: selectPostIds,
+} = postsAdapter.getSelectors<RootState>((state) => state.posts);
 
 export const { updatePost, addReaction } = postsSlice.actions;
 export default postsSlice.reducer;
