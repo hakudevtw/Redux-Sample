@@ -1,14 +1,18 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
+import { selectPostById } from "..";
 import ReactionButtons from "./ReactionButtons";
 import PostAuthor from "./PostAuthor";
 import TimeAgo from "./TimeAgo";
 import type { Post } from "../interfaces";
-
 interface Props {
-  post: Post;
+  postId: Post["id"];
 }
 
-const PostExcerpt: React.FC<Props> = ({ post }) => {
+const PostExcerpt: React.FC<Props> = ({ postId }) => {
+  const post = useAppSelector((state) => selectPostById(state, postId))!;
+
   return (
     <article className="post-excerpt">
       <h3>{post.title}</h3>

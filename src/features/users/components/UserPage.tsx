@@ -9,11 +9,8 @@ interface Props extends RouteComponentProps<{ userId: string }> {}
 const UserPage: React.FC<Props> = ({ match }) => {
   const { userId } = match.params;
 
-  const user = useAppSelector(selectUserById(userId));
+  const user = useAppSelector((state) => selectUserById(state, userId));
 
-  // const postsForUser = useAppSelector(selectAllPosts).filter(
-  //   (post) => post.userId === userId
-  // );
   const postsForUser = useAppSelector((state) =>
     selectPostsByUser(state, userId)
   );
