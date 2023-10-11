@@ -1,6 +1,7 @@
 import {
   createSlice,
   createAsyncThunk,
+  createSelector,
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -79,6 +80,10 @@ const postsSlice = createSlice({
 export const selectAllPosts = (state: RootState) => state.posts.posts;
 export const selectPostById = (postId: Post["id"]) => (state: RootState) =>
   state.posts.posts.find((post) => post.id === postId);
+export const selectPostsByUser = createSelector(
+  [selectAllPosts, (_, userId) => userId],
+  (posts, userId) => posts.filter((post) => post.userId === userId)
+);
 
 export const { updatePost, addReaction } = postsSlice.actions;
 export default postsSlice.reducer;

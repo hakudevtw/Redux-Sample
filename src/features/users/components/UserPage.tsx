@@ -2,7 +2,7 @@ import { useAppSelector } from "@/store/hooks";
 import { Link, type RouteComponentProps } from "react-router-dom";
 
 import { selectUserById } from "..";
-import { selectAllPosts } from "@/features/posts";
+import { selectPostsByUser } from "@/features/posts";
 
 interface Props extends RouteComponentProps<{ userId: string }> {}
 
@@ -11,8 +11,11 @@ const UserPage: React.FC<Props> = ({ match }) => {
 
   const user = useAppSelector(selectUserById(userId));
 
-  const postsForUser = useAppSelector(selectAllPosts).filter(
-    (post) => post.userId === userId
+  // const postsForUser = useAppSelector(selectAllPosts).filter(
+  //   (post) => post.userId === userId
+  // );
+  const postsForUser = useAppSelector((state) =>
+    selectPostsByUser(state, userId)
   );
 
   const postTitles = postsForUser.map((post) => (

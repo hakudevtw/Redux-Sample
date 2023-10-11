@@ -2,6 +2,7 @@ export {
   default as postsReducer,
   selectAllPosts,
   selectPostById,
+  selectPostsByUser,
 } from "./postsSlice";
 
 export { default as PostsList } from "./components/PostsList";
