@@ -1,22 +1,25 @@
 import { type ChangeEvent, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addNewPost } from "../postsSlice";
+import { useAppSelector } from "@/store/hooks";
 import { selectAllUsers } from "@/features/users";
 import type { NewPost } from "../interfaces";
 import { formIsValid } from "@/utils/tools";
-import type { RequestStatus } from "@/store/interfaces";
+import { useAddNewPostMutation } from "@/features/api";
 
 const AddPostForm = () => {
   const users = useAppSelector(selectAllUsers);
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
+  // const [requestStatus, setRequestStatus] = useState<RequestStatus>("idle");
+  // const canSave = formIsValid(postData) && requestStatus === "idle";
 
-  const [requestStatus, setRequestStatus] = useState<RequestStatus>("idle");
+  const [addNewPost, { isLoading }] = useAddNewPostMutation();
+
   const [postData, setPostData] = useState<Readonly<NewPost>>({
     title: "",
     content: "",
     userId: "",
   });
-  const canSave = formIsValid(postData) && requestStatus === "idle";
+
+  const canSave = formIsValid(postData) && !isLoading;
 
   function handleChange(
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -28,17 +31,12 @@ const AddPostForm = () => {
     if (!canSave) return;
 
     try {
-      setRequestStatus("loading");
-      const data = await dispatch(addNewPost(postData)).unwrap();
-      // payload from fulfilled action
-      console.log(data);
+      await addNewPost(postData).unwrap();
       setPostData({ title: "", content: "", userId: "" });
-    } catch (error) {
-      // error from rejected action
-      console.log("Failed Adding New Post...", error);
-    } finally {
-      setRequestStatus("idle");
+    } catch (err) {
+      console.error("Failed to save the post: ", err);
     }
+    setPostData({ title: "", content: "", userId: "" });
   };
 
   const usersOptions = users.map((user) => (
@@ -52,30 +50,14 @@ const AddPostForm = () => {
       <h2>Add a New Post</h2>
       <form>
         <label htmlFor="title">Post Title:</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          value={postData.title}
-          onChange={handleChange}
-        />
+        <input type="text" id="title" name="title" value={postData.title} onChange={handleChange} />
         <label htmlFor="userId">Author:</label>
-        <select
-          id="userId"
-          name="userId"
-          value={postData.userId}
-          onChange={handleChange}
-        >
+        <select id="userId" name="userId" value={postData.userId} onChange={handleChange}>
           <option value=""></option>
           {usersOptions}
         </select>
         <label htmlFor="content">Content:</label>
-        <textarea
-          id="content"
-          name="content"
-          value={postData.content}
-          onChange={handleChange}
-        />
+        <textarea id="content" name="content" value={postData.content} onChange={handleChange} />
         <button type="button" onClick={onSavePostClicked} disabled={!canSave}>
           Save Post
         </button>

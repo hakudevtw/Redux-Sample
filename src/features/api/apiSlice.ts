@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { Post } from "../posts";
+import type { Post, NewPost } from "../posts";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -11,7 +11,15 @@ export const apiSlice = createApi({
     getPost: builder.query<Post, Post["id"]>({
       query: (postId) => `/posts/${postId}`,
     }),
+    addNewPost: builder.mutation<Post, NewPost>({
+      query: (initialPost) => ({
+        url: "/posts",
+        method: "POST",
+        // Include the entire post object as the body of the request
+        body: initialPost,
+      }),
+    }),
   }),
 });
 
-export const { useGetPostsQuery, useGetPostQuery } = apiSlice;
+export const { useGetPostsQuery, useGetPostQuery, useAddNewPostMutation } = apiSlice;
