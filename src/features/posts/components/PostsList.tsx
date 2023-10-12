@@ -1,31 +1,43 @@
-import { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { selectPostIds, fetchPosts } from "../postsSlice";
 import { Spinner } from "@/components/Spinner";
 import PostExcerpt from "./PostExcerpt";
-import type { Post } from "../interfaces";
+import { useGetPostsQuery } from "@/features/api";
+import { useMemo } from "react";
 
 const PostsList = () => {
-  const dispatch = useAppDispatch();
-  const orderedPostIds = useAppSelector(selectPostIds) as Post["id"][]; // Overwrite type EntityId[]
-  const postStatus = useAppSelector((state) => state.posts.status);
-  const error = useAppSelector((state) => state.posts.error);
+  // const dispatch = useAppDispatch();
+  // const orderedPostIds = useAppSelector(selectPostIds) as Post["id"][];
+  // const postStatus = useAppSelector((state) => state.posts.status);
+  // const error = useAppSelector((state) => state.posts.error);
+  // useEffect(() => {
+  //   if (postStatus === "idle") dispatch(fetchPosts());
+  // }, [postStatus, dispatch]);
 
-  useEffect(() => {
-    if (postStatus === "idle") dispatch(fetchPosts());
-  }, [postStatus, dispatch]);
+  const {
+    data: posts = [],
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetPostsQuery();
 
-  let content;
+  const sortedPosts = useMemo(() => {
+    const sortedPosts = posts.slice();
+    // Sort posts in descending chronological order
+    sortedPosts.sort((a, b) => b.date.localeCompare(a.date));
+    return sortedPosts;
+  }, [posts]);
 
-  if (postStatus === "loading") content = <Spinner text="Loading..." />;
+  let content: React.ReactNode;
 
-  if (postStatus === "failed") content = <div>{error}</div>;
+  if (isLoading) content = <Spinner text="Loading..." />;
 
-  if (postStatus === "succeeded") {
-    content = orderedPostIds.map((postId) => <PostExcerpt key={postId} postId={postId} />);
+  if (isError) content = <div>{error.toString()}</div>;
+
+  if (isSuccess) {
+    content = sortedPosts.map((post) => (
+      <PostExcerpt key={post.id} post={post} />
+    ));
   }
-
-  if (postStatus === "loading") return <Spinner text="Loading..." />;
 
   return (
     <section className="posts-list">

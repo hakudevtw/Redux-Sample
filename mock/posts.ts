@@ -24,6 +24,12 @@ const posts = [
 
 export const getAllPosts = () => posts;
 
+export const getSinglePost = (req: { query: { postId: Post["id"] } }) => {
+  const postId = req.query.postId;
+  console.log(postId);
+  return posts.find((post) => post.id === postId);
+};
+
 export const addNewPost = (req: { body: NewPost }) => {
   const { body } = req;
   const newPost = {

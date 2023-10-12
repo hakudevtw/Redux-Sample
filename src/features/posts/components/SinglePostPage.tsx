@@ -1,8 +1,8 @@
-import { useAppSelector } from "@/store/hooks";
 import type { RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { selectPostById } from "../postsSlice";
+import { useGetPostQuery } from "@/features/api";
 
+import { Spinner } from "@/components/Spinner";
 import ReactionButtons from "./ReactionButtons";
 import TimeAgo from "./TimeAgo";
 import PostAuthor from "./PostAuthor";
@@ -11,18 +11,23 @@ interface Props extends RouteComponentProps<{ postId: string }> {}
 
 const SinglePostPage: React.FC<Props> = ({ match }) => {
   const { postId } = match.params;
-  const post = useAppSelector((state) => selectPostById(state, postId));
+  // const post = useAppSelector((state) => selectPostById(state, postId));
+  const { data: post, isFetching, isSuccess } = useGetPostQuery(postId);
 
-  if (!post) {
-    return (
+  let content: React.ReactNode;
+
+  if (isFetching) content = <Spinner text="Loading..." />;
+
+  if (isSuccess && !post) {
+    content = (
       <section>
         <h2>Post not found!</h2>
       </section>
     );
   }
 
-  return (
-    <section>
+  if (isSuccess && !!post) {
+    content = (
       <article className="post">
         <h2>{post.title}</h2>
         <div>
@@ -35,8 +40,10 @@ const SinglePostPage: React.FC<Props> = ({ match }) => {
           Edit Post
         </Link>
       </article>
-    </section>
-  );
+    );
+  }
+
+  return <section>{content}</section>;
 };
 
 export default SinglePostPage;
