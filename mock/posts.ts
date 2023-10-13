@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import type { NewPost, Post } from "@/features/posts";
 import { generateRandomDate } from "@/utils/tools";
+import { EditPost } from "@/features/posts/interfaces";
 
 const posts = [
   {
@@ -40,4 +41,21 @@ export const addNewPost = (req: { body: NewPost }) => {
   };
   posts.push(newPost);
   return newPost as Post;
+};
+
+export const updatePost = (req: {
+  body: EditPost;
+  query: { postId: Post["id"] };
+}) => {
+  const { body } = req;
+  const { title, content } = body;
+  const postId = req.query.postId;
+  const target = posts.find((post) => post.id === postId);
+
+  if (target) {
+    target["title"] = title;
+    target["content"] = content;
+  }
+
+  return target as Post;
 };

@@ -2,6 +2,7 @@ import { Spinner } from "@/components/Spinner";
 import PostExcerpt from "./PostExcerpt";
 import { useGetPostsQuery } from "@/features/api";
 import { useMemo } from "react";
+import cx from "clsx";
 
 const PostsList = () => {
   // const dispatch = useAppDispatch();
@@ -18,11 +19,11 @@ const PostsList = () => {
     isSuccess,
     isError,
     error,
+    isFetching,
   } = useGetPostsQuery();
 
   const sortedPosts = useMemo(() => {
     const sortedPosts = posts.slice();
-    // Sort posts in descending chronological order
     sortedPosts.sort((a, b) => b.date.localeCompare(a.date));
     return sortedPosts;
   }, [posts]);
@@ -34,9 +35,13 @@ const PostsList = () => {
   if (isError) content = <div>{error.toString()}</div>;
 
   if (isSuccess) {
-    content = sortedPosts.map((post) => (
+    const renderedPosts = sortedPosts.map((post) => (
       <PostExcerpt key={post.id} post={post} />
     ));
+
+    const containerClassName = cx("posts-container", { disabled: isFetching });
+
+    content = <div className={containerClassName}>{renderedPosts}</div>;
   }
 
   return (
