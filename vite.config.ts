@@ -6,9 +6,5 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default ({ command }: ConfigEnv): UserConfigExport => ({
-  plugins: [
-    react(),
-    tsconfigPaths(),
-    viteMockServe({ localEnabled: command === "serve" }),
-  ],
+  plugins: [react(), tsconfigPaths(), viteMockServe({ localEnabled: command === "serve" })],
 });

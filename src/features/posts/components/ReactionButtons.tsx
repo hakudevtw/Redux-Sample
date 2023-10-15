@@ -1,19 +1,17 @@
-import { useAppDispatch } from "@/store/hooks";
 import { typedEntries } from "@/utils/array-methods";
-import { addReaction } from "../postsSlice";
 import type { Post } from "../interfaces";
 import { reactionEmoji } from "../constants";
+import { useAddReactionMutation } from "@/features/api";
 
 interface Props {
   post: Post;
 }
 
 const ReactionButtons: React.FC<Props> = ({ post }) => {
-  const dispatch = useAppDispatch();
+  const [addReaction] = useAddReactionMutation();
 
   const reactionButtons = typedEntries(reactionEmoji).map(([name, emoji]) => {
-    const handleAddReaction = () =>
-      dispatch(addReaction({ postId: post.id, reaction: name }));
+    const handleAddReaction = () => addReaction({ postId: post.id, reaction: name });
 
     return (
       <button

@@ -1,5 +1,5 @@
 import { MockMethod } from "vite-plugin-mock";
-import { getAllPosts, addNewPost, getSinglePost, updatePost } from "./posts";
+import { getAllPosts, addNewPost, getSinglePost, updatePost, addReaction } from "./posts";
 import { getAllUsers } from "./users";
 import { getLatestNotifications } from "./notifications";
 
@@ -23,6 +23,11 @@ export default [
     url: "/api/posts/:postId",
     method: "patch",
     response: updatePost,
+  },
+  {
+    url: "/api/posts/:postId/reactions",
+    method: "post",
+    response: addReaction,
   },
   {
     url: "/api/users",

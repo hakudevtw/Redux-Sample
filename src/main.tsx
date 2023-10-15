@@ -3,9 +3,13 @@ import App from "./App.tsx";
 import "./index.css";
 import { Provider } from "react-redux";
 import store from "./store";
-import { fetchUsers } from "./features/users/userSlice.ts";
+import { extendedApiSlice } from "./features/users";
 
-store.dispatch(fetchUsers());
+// Fixing dispatch type error
+// https://lightrun.com/answers/reduxjs-redux-thunk-thunkaction-is-not-assignable-to-parameter-of-type-anyaction
+import type {} from "redux-thunk/extend-redux";
+
+store.dispatch(extendedApiSlice.endpoints.getUsers.initiate());
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <Provider store={store}>

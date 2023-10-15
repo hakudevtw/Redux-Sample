@@ -13,14 +13,7 @@ const PostsList = () => {
   //   if (postStatus === "idle") dispatch(fetchPosts());
   // }, [postStatus, dispatch]);
 
-  const {
-    data: posts = [],
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-    isFetching,
-  } = useGetPostsQuery();
+  const { data: posts = [], isLoading, isSuccess, isError, error, isFetching } = useGetPostsQuery();
 
   const sortedPosts = useMemo(() => {
     const sortedPosts = posts.slice();
@@ -35,9 +28,7 @@ const PostsList = () => {
   if (isError) content = <div>{error.toString()}</div>;
 
   if (isSuccess) {
-    const renderedPosts = sortedPosts.map((post) => (
-      <PostExcerpt key={post.id} post={post} />
-    ));
+    const renderedPosts = sortedPosts.map((post) => <PostExcerpt key={post.id} post={post} />);
 
     const containerClassName = cx("posts-container", { disabled: isFetching });
 

@@ -20,14 +20,11 @@ const initialState = postsAdapter.getInitialState<RequestState>({
   error: null,
 });
 
-export const fetchPosts = createAsyncThunk<Post[]>(
-  "posts/fetchPosts",
-  async () => {
-    const res = await axios.get("/api/posts");
-    await delay(2000);
-    return res.data;
-  }
-);
+export const fetchPosts = createAsyncThunk<Post[]>("posts/fetchPosts", async () => {
+  const res = await axios.get("/api/posts");
+  await delay(2000);
+  return res.data;
+});
 
 export const addNewPost = createAsyncThunk<Post, NewPost>(
   "posts/addNewPost",
@@ -51,10 +48,7 @@ const postsSlice = createSlice({
       }
     },
 
-    addReaction(
-      state,
-      action: PayloadAction<{ postId: Post["id"]; reaction: Reaction }>
-    ) {
+    addReaction(state, action: PayloadAction<{ postId: Post["id"]; reaction: Reaction }>) {
       const { postId, reaction } = action.payload;
       const existingPost = state.entities[postId];
       if (existingPost) existingPost.reactions[reaction]++;
@@ -85,7 +79,7 @@ export const {
   selectIds: selectPostIds,
 } = postsAdapter.getSelectors<RootState>((state) => state.posts);
 export const selectPostsByUser = createSelector(
-  [selectAllPosts, (_, userId) => userId],
+  [selectAllPosts, (_, userId: Post["id"]) => userId],
   (posts, userId) => posts.filter((post) => post.userId === userId)
 );
 

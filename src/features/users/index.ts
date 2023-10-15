@@ -1,9 +1,4 @@
-export {
-  default as usersReducer,
-  selectAllUsers,
-  selectUserById,
-  fetchUsers,
-} from "./userSlice";
+export { extendedApiSlice, selectAllUsers, selectUserById } from "./userSlice";
 
 export type { User } from "./interfaces";
 
